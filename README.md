@@ -1,2 +1,3 @@
-# snare-sprint
-Another game made in Godot for my video games course.
+# Snare Sprint
+
+Made with Godot v4.4.1
