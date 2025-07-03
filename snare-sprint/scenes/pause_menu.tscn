@@ -1,0 +1,77 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvdqh7fc62qwd"]
+
+[ext_resource type="Script" uid="uid://cafps6xghc8n0" path="res://scripts/pause_menu.gd" id="1_hdmo1"]
+
+[sub_resource type="Theme" id="Theme_g6pxe"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ovdm8"]
+font_size = 32
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hdmo1")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_g6pxe")
+color = Color(0, 0, 0, 0.501961)
+
+[node name="VBoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = -132.0
+offset_right = 49.0
+offset_bottom = 85.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.4, 1.4)
+theme_override_constants/separation = 15
+alignment = 1
+vertical = true
+
+[node name="ResumeButton" type="Button" parent="VBoxContainer"]
+process_mode = 3
+layout_mode = 2
+text = "Resume"
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="RestartButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Restart"
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Quit Game"
+vertical_icon_alignment = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -104.0
+offset_top = 112.0
+offset_right = 108.0
+offset_bottom = 157.0
+grow_horizontal = 2
+text = "Game Paused"
+label_settings = SubResource("LabelSettings_ovdm8")
