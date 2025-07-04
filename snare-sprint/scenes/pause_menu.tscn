@@ -1,10 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://cvdqh7fc62qwd"]
+[gd_scene load_steps=8 format=3 uid="uid://d0gv1ebfule3q"]
 
-[ext_resource type="Script" uid="uid://cafps6xghc8n0" path="res://scripts/pause_menu.gd" id="1_hdmo1"]
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_hdmo1"]
+[ext_resource type="FontFile" uid="uid://b1jlkwfxyrp6x" path="res://misc/OpenSans-VariableFont_wdth,wght.ttf" id="2_myx47"]
 
 [sub_resource type="Theme" id="Theme_g6pxe"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_kukqi"]
+font = ExtResource("2_myx47")
+font_size = 17
+
+[sub_resource type="LabelSettings" id="LabelSettings_5d2l8"]
+font = ExtResource("2_myx47")
+
+[sub_resource type="LabelSettings" id="LabelSettings_7l7mv"]
+font = ExtResource("2_myx47")
+
 [sub_resource type="LabelSettings" id="LabelSettings_ovdm8"]
+font = ExtResource("2_myx47")
 font_size = 32
 
 [node name="PauseMenu" type="Control"]
@@ -25,7 +37,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_g6pxe")
-color = Color(0, 0, 0, 0.501961)
+color = Color(0, 0, 0, 0.376471)
 
 [node name="VBoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -47,23 +59,56 @@ vertical = true
 
 [node name="ResumeButton" type="Button" parent="VBoxContainer"]
 process_mode = 3
+texture_filter = 2
 layout_mode = 2
-text = "Resume"
+text = "
+"
 icon_alignment = 1
 vertical_icon_alignment = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/ResumeButton"]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 54.0
+text = "Resume"
+label_settings = SubResource("LabelSettings_kukqi")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RestartButton" type="Button" parent="VBoxContainer"]
+texture_filter = 2
 layout_mode = 2
-text = "Restart"
+text = "
+"
 icon_alignment = 1
 vertical_icon_alignment = 0
 
+[node name="Label" type="Label" parent="VBoxContainer/RestartButton"]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 54.0
+text = "Restart"
+label_settings = SubResource("LabelSettings_5d2l8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
+texture_filter = 2
 layout_mode = 2
-text = "Quit Game"
+text = "
+"
 vertical_icon_alignment = 2
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="VBoxContainer/QuitButton"]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 54.0
+text = "Quit Game"
+label_settings = SubResource("LabelSettings_7l7mv")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GamePaused" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

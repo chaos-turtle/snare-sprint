@@ -1,10 +1,10 @@
 extends CharacterBody3D
 
 # Movement constants
-const SPEED = 3.0
-const SPRINT_SPEED = 6.0
-const CROUCH_SPEED = 1.5
-const JUMP_VELOCITY = 3.0
+const SPEED = 10.0
+const SPRINT_SPEED = 13.0
+const CROUCH_SPEED = 5
+const JUMP_VELOCITY = 4.0
 
 # Crouch constants
 const NORMAL_HEIGHT = 1.8
