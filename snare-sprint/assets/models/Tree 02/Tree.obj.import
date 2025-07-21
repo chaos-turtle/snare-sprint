@@ -36,7 +36,7 @@ _subresources={
 "materials": {
 "DB2X2_L01": {
 "use_external/enabled": true,
-"use_external/path": ""
+"use_external/path": "uid://vb3e0l6cgdkn"
 }
 }
 }

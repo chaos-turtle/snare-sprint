@@ -1,24 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://2na5vsccmosq"]
+[gd_scene load_steps=3 format=3 uid="uid://2na5vsccmosq"]
 
-[ext_resource type="PackedScene" uid="uid://b6lbudbl5ym3" path="res://assets/models/Tree 02/Tree.obj" id="1_vplca"]
-[ext_resource type="Texture2D" uid="uid://gq11dafokd3x" path="res://assets/models/Tree 02/DB2X2_L01.png" id="2_viusy"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qd6xs"]
-transparency = 1
-albedo_texture = ExtResource("2_viusy")
+[ext_resource type="ArrayMesh" uid="uid://bncr2wm7ev7tn" path="res://scenes/tree_mesh.tres" id="1_avsvi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vplca"]
 radius = 0.255885
 height = 4.44195
 
-[node name="Tree" instance=ExtResource("1_vplca")]
+[node name="Tree" type="Node3D"]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 
-[node name="Mesh" parent="." index="0"]
-surface_material_override/1 = SubResource("StandardMaterial3D_qd6xs")
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_avsvi")
+skeleton = NodePath("")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.96676, 0)
 shape = SubResource("CapsuleShape3D_vplca")
