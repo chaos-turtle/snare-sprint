@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://d0gv1ebfule3q"]
 
-[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_hdmo1"]
+[ext_resource type="Script" uid="uid://cafps6xghc8n0" path="res://scripts/pause_menu.gd" id="1_hdmo1"]
 [ext_resource type="FontFile" uid="uid://b1jlkwfxyrp6x" path="res://misc/OpenSans-VariableFont_wdth,wght.ttf" id="2_myx47"]
 
 [sub_resource type="Theme" id="Theme_g6pxe"]

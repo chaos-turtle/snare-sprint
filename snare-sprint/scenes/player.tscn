@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://xs3xk2ig444k"]
+[gd_scene load_steps=6 format=3 uid="uid://xs3xk2ig444k"]
 
 [ext_resource type="Script" uid="uid://cdlfa1us6yarf" path="res://scripts/player.gd" id="1_w6cyi"]
+[ext_resource type="PackedScene" uid="uid://e6bfnrmc4wt1" path="res://scenes/gun.tscn" id="2_qhqgy"]
 [ext_resource type="AudioStream" uid="uid://dhtcg8ym0yibu" path="res://sfx/cartoon-jump-6462.mp3" id="2_tc4te"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_78toj"]
@@ -25,3 +26,26 @@ fov = 90.0
 
 [node name="JumpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_tc4te")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = -1
+anchor_right = 1.27
+anchor_bottom = 1.433
+offset_right = 456.96
+offset_bottom = 151.416
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="GunCamera" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.656405, 0)
+fov = 90.0
+
+[node name="Space-Shooter-Gun" parent="SubViewportContainer/SubViewport/GunCamera" instance=ExtResource("2_qhqgy")]
+transform = Transform3D(-0.5, 0, 4.37114e-08, 0, 0.5, 0, -4.37114e-08, 0, -0.5, 0.1, -0.7, -1.603)
