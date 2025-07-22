@@ -14,12 +14,16 @@ const CROUCH_TRANSITION_SPEED = 8.0
 @onready var jump_sound := $JumpSound
 @onready var collision_shape := $CollisionShape3D
 @export var net_scene: PackedScene
+@export var cooldown_time: float = 2.0
 
+var can_shoot: bool = true
 var is_crouching = false
 var current_speed = SPEED
 
 func _ready():
 	add_to_group("player")
+	$CooldownTimer.timeout.connect(_on_cooldown_finished)
+	$CooldownTimer.wait_time = cooldown_time
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -85,14 +89,21 @@ func _input(event):
 		shoot_net()
 
 func shoot_net():
+	if not can_shoot:
+		return
+	
+	can_shoot = false
+	$CooldownTimer.start()
+	
 	var net = net_scene.instantiate() as RigidBody3D
 	var muzzle = $Neck/Camera3D/Muzzle
 	get_tree().current_scene.add_child(net)
-
 	net.global_transform.origin = muzzle.global_transform.origin
 	net.global_transform.basis = muzzle.global_transform.basis
 	
 	await get_tree().process_frame
-
 	var direction = -muzzle.global_transform.basis.z.normalized()
-	net.linear_velocity = direction * 15
+	net.linear_velocity = direction * 20
+
+func _on_cooldown_finished():
+	can_shoot = true

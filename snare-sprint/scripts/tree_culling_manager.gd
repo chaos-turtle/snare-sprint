@@ -23,7 +23,7 @@ func _process(_delta):
 		elif dist > disable_distance and tree.visible:
 			tree.visible = false
 			_set_tree_collisions_enabled(tree, false)
-
+			
 
 func _set_tree_collisions_enabled(tree: Node3D, enabled: bool) -> void:
 	for shape in tree.get_children():

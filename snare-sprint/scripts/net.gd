@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-@export var max_scale: float = 0.4
+@export var max_scale: float = 0.5
 @export var growth_rate: float = 2
 
 @onready var mesh = $mesh

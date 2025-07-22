@@ -1,7 +1,7 @@
 [gd_resource type="ArrayMesh" load_steps=5 format=4 uid="uid://bncr2wm7ev7tn"]
 
 [ext_resource type="Texture2D" uid="uid://c2pscssm8jfvo" path="res://assets/models/Tree 02/bark_0004.jpg" id="1_ookbn"]
-[ext_resource type="Material" uid="uid://vb3e0l6cgdkn" path="res://scenes/leaves.tres" id="2_15xm7"]
+[ext_resource type="Material" uid="uid://vb3e0l6cgdkn" path="res://assets/textures/leaves.tres" id="2_15xm7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yotmj"]
 resource_name = "Trank_bark"
