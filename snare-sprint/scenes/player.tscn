@@ -24,6 +24,9 @@ shape = SubResource("CapsuleShape3D_fte5v")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.672132, 0)
 fov = 90.0
 
+[node name="Muzzle" type="Marker3D" parent="Neck/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.25, -0.9)
+
 [node name="JumpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_tc4te")
 
