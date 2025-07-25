@@ -1,0 +1,97 @@
+[gd_scene load_steps=6 format=3 uid="uid://cn7nvl1cdl0le"]
+
+[ext_resource type="Script" uid="uid://buqu72tqklwhq" path="res://scripts/victory_screen.gd" id="1_dcgam"]
+[ext_resource type="AudioStream" uid="uid://dqujjmfeuobl5" path="res://sfx/marimba-win-b-3-209679.mp3" id="2_bpegy"]
+[ext_resource type="FontFile" uid="uid://b1jlkwfxyrp6x" path="res://misc/OpenSans-VariableFont_wdth,wght.ttf" id="2_hl81x"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_qqyjf"]
+font = ExtResource("2_hl81x")
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_73dpb"]
+font = ExtResource("2_hl81x")
+
+[node name="VictoryScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dcgam")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -84.5
+offset_top = -96.0
+offset_right = 84.5
+offset_bottom = -41.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "You Win!"
+label_settings = SubResource("LabelSettings_qqyjf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = 15.5
+offset_right = 47.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Play Again?"
+
+[node name="TimeLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -24.5
+offset_right = 87.0
+offset_bottom = -1.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Time Taken: -- seconds"
+label_settings = SubResource("LabelSettings_73dpb")
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = 62.5
+offset_right = 46.0
+offset_bottom = 93.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit Game"
+
+[node name="WinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_bpegy")

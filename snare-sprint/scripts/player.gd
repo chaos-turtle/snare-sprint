@@ -13,17 +13,21 @@ const CROUCH_TRANSITION_SPEED = 8.0
 @onready var camera := $Neck/Camera3D
 @onready var jump_sound := $JumpSound
 @onready var collision_shape := $CollisionShape3D
+@onready var ammo_label: Label = $"../UI/Control/AmmoLabel"
 @export var net_scene: PackedScene
-@export var cooldown_time: float = 2.0
+@export var cooldown_time: float = 1.5
+@export var max_ammo: int = 20
 
 var can_shoot: bool = true
 var is_crouching = false
 var current_speed = SPEED
+var current_ammo: int = 3
 
 func _ready():
 	add_to_group("player")
 	$CooldownTimer.timeout.connect(_on_cooldown_finished)
 	$CooldownTimer.wait_time = cooldown_time
+	update_ammo_label()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -89,7 +93,7 @@ func _input(event):
 		shoot_net()
 
 func shoot_net():
-	if not can_shoot:
+	if not can_shoot or current_ammo <= 0:
 		return
 	
 	can_shoot = false
@@ -101,9 +105,19 @@ func shoot_net():
 	net.global_transform.origin = muzzle.global_transform.origin
 	net.global_transform.basis = muzzle.global_transform.basis
 	
+	current_ammo -= 1
+	update_ammo_label()
+	
 	await get_tree().process_frame
 	var direction = -muzzle.global_transform.basis.z.normalized()
 	net.linear_velocity = direction * 20
 
 func _on_cooldown_finished():
 	can_shoot = true
+
+func update_ammo_label():
+	ammo_label.text = "Ammo: %d" % current_ammo
+
+func add_ammo(amount: int):
+	current_ammo = clamp(current_ammo + amount, 0, max_ammo)
+	update_ammo_label()

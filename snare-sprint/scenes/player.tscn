@@ -46,12 +46,12 @@ handle_input_locally = false
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="GunCamera" type="Camera3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.656405, 0)
-fov = 90.0
+[node name="Space-Shooter-Gun" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_qhqgy")]
+transform = Transform3D(-0.5, 0, 4.37114e-08, 0, 0.5, 0, -4.37114e-08, 0, -0.5, 0.1, -0.044, -1.5)
 
-[node name="Space-Shooter-Gun" parent="SubViewportContainer/SubViewport/GunCamera" instance=ExtResource("2_qhqgy")]
-transform = Transform3D(-0.5, 0, 4.37114e-08, 0, 0.5, 0, -4.37114e-08, 0, -0.5, 0.1, -0.7, -1.603)
+[node name="GunCamera" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 0.65, 0)
+fov = 90.0
 
 [node name="CooldownTimer" type="Timer" parent="."]
 wait_time = 2.0

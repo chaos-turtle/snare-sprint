@@ -1,0 +1,78 @@
+[gd_scene load_steps=5 format=3 uid="uid://df1abmncgwdce"]
+
+[ext_resource type="Script" uid="uid://cp8b075x2urd4" path="res://scripts/game_over_screen.gd" id="1_8bjv7"]
+[ext_resource type="AudioStream" uid="uid://diwsrh6pebae3" path="res://sfx/marimba-lose-250960.mp3" id="2_cd1w5"]
+[ext_resource type="FontFile" uid="uid://b1jlkwfxyrp6x" path="res://misc/OpenSans-VariableFont_wdth,wght.ttf" id="2_tbwuq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jy8rq"]
+font = ExtResource("2_tbwuq")
+font_size = 40
+
+[node name="GameOverScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8bjv7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -114.0
+offset_top = -76.0
+offset_right = 114.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Game Over!"
+label_settings = SubResource("LabelSettings_jy8rq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.5
+offset_top = -4.5
+offset_right = 46.5
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Play Again?"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = 43.5
+offset_right = 46.0
+offset_bottom = 74.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit Game"
+
+[node name="LoseSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_cd1w5")
