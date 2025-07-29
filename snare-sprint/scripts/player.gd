@@ -110,7 +110,7 @@ func shoot_net():
 	
 	await get_tree().process_frame
 	var direction = -muzzle.global_transform.basis.z.normalized()
-	net.linear_velocity = direction * 20
+	net.linear_velocity = direction * 25
 
 func _on_cooldown_finished():
 	can_shoot = true

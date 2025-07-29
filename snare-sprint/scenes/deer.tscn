@@ -1,5 +1,6 @@
-[gd_scene load_steps=25 format=4 uid="uid://d0twca6ytf2j7"]
+[gd_scene load_steps=28 format=4 uid="uid://d0twca6ytf2j7"]
 
+[ext_resource type="Script" uid="uid://rwgmivrip75d" path="res://scripts/deer.gd" id="1_7c7n6"]
 [ext_resource type="Texture2D" uid="uid://b4gvaqlyrajhy" path="res://assets/models/Deer/doe-body.png" id="1_u3xnd"]
 [ext_resource type="Texture2D" uid="uid://coj68yns1o4h0" path="res://assets/models/Deer/doe-head.png" id="2_7c7n6"]
 
@@ -3095,16 +3096,17 @@ _data = {
 &"Stand": SubResource("Animation_w84o5")
 }
 
-[node name="deer" type="Node3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_7c7n6"]
+radius = 0.8
 
-[node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(0.459352, -0.075284, 0.885058, -0.0106894, 0.995861, 0.0902568, -0.88819, -0.0509203, 0.456646, 8.63058, 3.73375, 5.12149)
-fov = 49.1343
-near = 0.1
-far = 100.0
+[sub_resource type="SphereShape3D" id="SphereShape3D_euvas"]
+radius = 20.0
+
+[node name="deer" type="CharacterBody3D"]
+script = ExtResource("1_7c7n6")
 
 [node name="Armature" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.83804, -0.647757)
+transform = Transform3D(-0.3, 0, -2.62268e-08, 0, 0.3, 0, 2.62268e-08, 0, -0.3, 0, 0.8, 0)
 
 [node name="Skeleton3D" type="Skeleton3D" parent="Armature"]
 bones/0/name = "Main"
@@ -3252,7 +3254,7 @@ bones/20/parent = 19
 bones/20/rest = Transform3D(1, -3.29328e-07, 9.5294e-07, -1.25418e-07, 0.897179, 0.441668, -1.00041e-06, -0.441668, 0.897179, -1.34115e-13, 2.08147, 5.32907e-15)
 bones/20/enabled = true
 bones/20/position = Vector3(-1.34115e-13, 2.08147, 5.32907e-15)
-bones/20/rotation = Quaternion(-0.226739, 5.45408e-07, 4.2891e-08, 0.973955)
+bones/20/rotation = Quaternion(-0.226739, 5.45408e-07, 4.2891e-08, 0.973956)
 bones/20/scale = Vector3(1, 1, 1)
 bones/21/name = "Head_L.001"
 bones/21/parent = 20
@@ -3280,7 +3282,7 @@ bones/24/parent = 23
 bones/24/rest = Transform3D(0.99758, 0.069382, -0.00449924, -0.0695247, 0.994843, -0.0738533, -0.000648052, 0.0739874, 0.997259, -7.91624e-09, 1.58267, 1.39757e-07)
 bones/24/enabled = true
 bones/24/position = Vector3(-7.91624e-09, 1.58267, 1.39757e-07)
-bones/24/rotation = Quaternion(0.050817, -0.01439, -0.000611088, 0.998604)
+bones/24/rotation = Quaternion(0.050817, -0.01439, -0.000611087, 0.998604)
 bones/24/scale = Vector3(1, 1, 1)
 bones/25/name = "Frontleg_L.002"
 bones/25/parent = 24
@@ -3294,14 +3296,14 @@ bones/26/parent = 18
 bones/26/rest = Transform3D(0.99758, 0.0695254, 0.000648452, -0.0323249, 0.472029, -0.88099, -0.0615573, 0.878837, 0.473134, -0.444258, 0.430399, 0.0802676)
 bones/26/enabled = true
 bones/26/position = Vector3(-0.444258, 0.430399, 0.0802676)
-bones/26/rotation = Quaternion(0.508431, 0.0272698, -0.00635972, 0.860648)
+bones/26/rotation = Quaternion(0.508431, 0.0272698, -0.00635972, 0.860647)
 bones/26/scale = Vector3(1, 1, 1)
 bones/27/name = "Frontleg_R.001"
 bones/27/parent = 26
 bones/27/rest = Transform3D(0.99758, -0.069382, 0.00449924, 0.0695247, 0.994843, -0.0738533, 0.000648048, 0.0739874, 0.997259, 1.73459e-08, 1.58267, 6.46833e-08)
 bones/27/enabled = true
 bones/27/position = Vector3(1.73459e-08, 1.58267, 6.46833e-08)
-bones/27/rotation = Quaternion(0.0508255, 0.0143901, 0.000611159, 0.998604)
+bones/27/rotation = Quaternion(0.0508255, 0.0143901, 0.000611157, 0.998604)
 bones/27/scale = Vector3(1, 1, 1)
 bones/28/name = "Frontleg_R.002"
 bones/28/parent = 27
@@ -3344,3 +3346,12 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wt38s")
 libraries = {
 &"": SubResource("AnimationLibrary_1jfhr")
 }
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.883203, -0.431599)
+shape = SubResource("SphereShape3D_7c7n6")
+
+[node name="DetectionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+shape = SubResource("SphereShape3D_euvas")
