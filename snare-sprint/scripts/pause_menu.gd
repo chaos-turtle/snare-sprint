@@ -4,7 +4,6 @@ extends Control
 @onready var restart_button: Button = $VBoxContainer/RestartButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)

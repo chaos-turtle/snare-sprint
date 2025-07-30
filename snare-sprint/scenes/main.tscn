@@ -1226,7 +1226,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.3242, 2.34391, 153.919)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.295, 1.83076, 144.811)
 
 [node name="Wolf" parent="." instance=ExtResource("12_muem4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.335, 3.11221, 185.701)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 94.9091, 4.62522, 126.181)
 
 [node name="deer" parent="." instance=ExtResource("18_dp3eg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.3042, 1.92213, 149.537)
