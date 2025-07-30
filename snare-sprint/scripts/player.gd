@@ -11,9 +11,11 @@ const CROUCH_TRANSITION_SPEED = 8.0
 
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
+@onready var muzzle := $Neck/Camera3D/Muzzle
 @onready var jump_sound := $JumpSound
 @onready var collision_shape := $CollisionShape3D
 @onready var ammo_label: Label = $"../UI/Control/AmmoLabel"
+@onready var score_label: Label = $"../UI/Control/HuntLabel"
 @export var net_scene: PackedScene
 @export var cooldown_time: float = 1.5
 @export var max_ammo: int = 20
@@ -22,12 +24,14 @@ var can_shoot: bool = true
 var is_crouching = false
 var current_speed = SPEED
 var current_ammo: int = 3
+var deer_captured: int = 0
 
 func _ready():
 	add_to_group("player")
 	$CooldownTimer.timeout.connect(_on_cooldown_finished)
 	$CooldownTimer.wait_time = cooldown_time
 	update_ammo_label()
+	update_score_label()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -75,9 +79,6 @@ func handle_crouch(delta: float):
 		is_crouching = !is_crouching
 	
 	var capsule_shape = collision_shape.shape as CapsuleShape3D
-	if capsule_shape == null:
-		push_error("CollisionShape3D should have a CapsuleShape3D")
-		return
 	
 	var target_height = CROUCH_HEIGHT if is_crouching else NORMAL_HEIGHT
 	var current_height = capsule_shape.height
@@ -100,7 +101,6 @@ func shoot_net():
 	$CooldownTimer.start()
 	
 	var net = net_scene.instantiate() as RigidBody3D
-	var muzzle = $Neck/Camera3D/Muzzle
 	get_tree().current_scene.add_child(net)
 	net.global_transform.origin = muzzle.global_transform.origin
 	net.global_transform.basis = muzzle.global_transform.basis
@@ -110,14 +110,23 @@ func shoot_net():
 	
 	await get_tree().process_frame
 	var direction = -muzzle.global_transform.basis.z.normalized()
-	net.linear_velocity = direction * 25
+	net.linear_velocity = direction * 40
 
 func _on_cooldown_finished():
 	can_shoot = true
 
 func update_ammo_label():
-	ammo_label.text = "Ammo: %d" % current_ammo
+	if ammo_label:
+		ammo_label.text = "Ammo: %d" % current_ammo
+
+func update_score_label():
+	if score_label:
+		score_label.text = "Deer Captured: %d" % deer_captured
 
 func add_ammo(amount: int):
 	current_ammo = clamp(current_ammo + amount, 0, max_ammo)
 	update_ammo_label()
+
+func on_deer_captured():
+	deer_captured += 1
+	update_score_label()

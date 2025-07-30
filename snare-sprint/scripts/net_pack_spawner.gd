@@ -36,7 +36,6 @@ func spawn_pack(index: int):
 	var net_instance = net_pack_scene.instantiate()
 	spawn_point.add_child(net_instance)
 	occupied_spots[index] = true
-
 	net_instance.picked_up.connect(func():
 		occupied_spots[index] = false
 	)

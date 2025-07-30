@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://xs3xk2ig444k"]
+[gd_scene load_steps=7 format=3 uid="uid://xs3xk2ig444k"]
 
 [ext_resource type="Script" uid="uid://cdlfa1us6yarf" path="res://scripts/player.gd" id="1_w6cyi"]
+[ext_resource type="PackedScene" uid="uid://b68bjdvd3m8gn" path="res://scenes/fishing_net.tscn" id="2_dqkch"]
 [ext_resource type="PackedScene" uid="uid://e6bfnrmc4wt1" path="res://scenes/gun.tscn" id="2_qhqgy"]
 [ext_resource type="AudioStream" uid="uid://dhtcg8ym0yibu" path="res://sfx/cartoon-jump-6462.mp3" id="2_tc4te"]
 
@@ -11,6 +12,7 @@ height = 1.8
 
 [node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_w6cyi")
+net_scene = ExtResource("2_dqkch")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_78toj")

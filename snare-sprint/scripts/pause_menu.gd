@@ -17,7 +17,18 @@ func _on_resume_pressed():
 
 func _on_restart_pressed():
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	
+	var terrain3d = get_node_or_null("../Terrain3D")
+	if terrain3d:
+		var data_directory = terrain3d.get_data_directory()
+		var parent = terrain3d.get_parent()
+		
+		terrain3d.queue_free()
+
+		await get_tree().process_frame
+		await get_tree().process_frame
+
+	get_tree().reload_current_scene()
 
 func _on_quit_pressed():
 	get_tree().quit()
