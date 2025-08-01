@@ -17,7 +17,7 @@ func _on_resume_pressed():
 func _on_restart_pressed():
 	get_tree().paused = false
 	
-	var terrain3d = get_node_or_null("../Terrain3D")
+	var terrain3d = get_node_or_null("/root/Main/Terrain3D")
 	if terrain3d:
 		var data_directory = terrain3d.get_data_directory()
 		var parent = terrain3d.get_parent()

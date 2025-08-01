@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
-const SPEED = 10.0
-const SPRINT_SPEED = 13.0
+const SPEED = 8.0
+const SPRINT_SPEED = 10.0
 const CROUCH_SPEED = 5
 const JUMP_VELOCITY = 4.0
 
@@ -14,8 +14,7 @@ const CROUCH_TRANSITION_SPEED = 8.0
 @onready var muzzle := $Neck/Camera3D/Muzzle
 @onready var jump_sound := $JumpSound
 @onready var collision_shape := $CollisionShape3D
-@onready var ammo_label: Label = $"../UI/Control/AmmoLabel"
-@onready var score_label: Label = $"../UI/Control/HuntLabel"
+@onready var ammo_label: Label = $"/root/Main/UI/Control/AmmoLabel"
 @export var net_scene: PackedScene
 @export var cooldown_time: float = 1.5
 @export var max_ammo: int = 20
@@ -24,14 +23,12 @@ var can_shoot: bool = true
 var is_crouching = false
 var current_speed = SPEED
 var current_ammo: int = 3
-var deer_captured: int = 0
 
 func _ready():
 	add_to_group("player")
 	$CooldownTimer.timeout.connect(_on_cooldown_finished)
 	$CooldownTimer.wait_time = cooldown_time
 	update_ammo_label()
-	update_score_label()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -119,14 +116,10 @@ func update_ammo_label():
 	if ammo_label:
 		ammo_label.text = "Ammo: %d" % current_ammo
 
-func update_score_label():
-	if score_label:
-		score_label.text = "Deer Captured: %d" % deer_captured
-
 func add_ammo(amount: int):
 	current_ammo = clamp(current_ammo + amount, 0, max_ammo)
 	update_ammo_label()
 
 func on_deer_captured():
-	deer_captured += 1
-	update_score_label()
+	var hunt_manager = get_node("/root/Main/HuntManager")
+	hunt_manager.on_deer_captured()

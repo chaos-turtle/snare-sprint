@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bg3vfrpse6i34"]
+[gd_scene load_steps=39 format=3 uid="uid://bg3vfrpse6i34"]
 
 [ext_resource type="Script" uid="uid://jhug63q5med5" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://xs3xk2ig444k" path="res://scenes/player.tscn" id="1_o5qli"]
@@ -13,9 +13,13 @@
 [ext_resource type="PackedScene" uid="uid://2na5vsccmosq" path="res://scenes/tree.tscn" id="11_ya4ey"]
 [ext_resource type="FontFile" uid="uid://b1jlkwfxyrp6x" path="res://misc/OpenSans-VariableFont_wdth,wght.ttf" id="12_jkv2x"]
 [ext_resource type="PackedScene" uid="uid://ckp6acuis7om6" path="res://scenes/wolf.tscn" id="12_muem4"]
-[ext_resource type="Script" uid="uid://35i2fklojcr1" path="res://scripts/net_pack_spawner.gd" id="15_jbj1t"]
+[ext_resource type="Script" uid="uid://dqbwiqh8asl0p" path="res://scripts/hunt_manager.gd" id="13_yc10j"]
+[ext_resource type="Script" uid="uid://ca8k0frmpmxbi" path="res://scripts/net_pack_spawner.gd" id="14_a8y0u"]
+[ext_resource type="Script" uid="uid://ctg2pf16icwa1" path="res://scripts/player_spawner.gd" id="15_0ld40"]
 [ext_resource type="Script" uid="uid://dq02aevnhtlgv" path="res://scripts/tree_culling_manager.gd" id="15_jkv2x"]
 [ext_resource type="PackedScene" uid="uid://bpkb4wkxl1vq7" path="res://scenes/net_pack.tscn" id="16_jbj1t"]
+[ext_resource type="Script" uid="uid://c5liccepp5g2q" path="res://scripts/deer_spawner.gd" id="16_muem4"]
+[ext_resource type="Script" uid="uid://bx6huxgukwb6v" path="res://scripts/wolf_spawner.gd" id="18_0ld40"]
 [ext_resource type="PackedScene" uid="uid://d0twca6ytf2j7" path="res://scenes/deer.tscn" id="18_dp3eg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
@@ -32,6 +36,7 @@ background_mode = 2
 sky = SubResource("Sky_sugp2")
 tonemap_mode = 2
 glow_enabled = true
+fog_enabled = true
 fog_light_color = Color(0.860369, 0.860369, 0.860369, 1)
 fog_light_energy = 0.3
 fog_sun_scatter = 0.2
@@ -97,7 +102,6 @@ dual_scaling = true
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_choun"]
 name = "grass123"
-enabled = false
 scene_file = ExtResource("4_choun")
 density = 0.595946
 cast_shadows = 0
@@ -139,9 +143,13 @@ font_size = 60
 font = ExtResource("12_jkv2x")
 font_size = 60
 
-[sub_resource type="GDScript" id="GDScript_a8y0u"]
-script/source = "extends Node3D
-"
+[sub_resource type="LabelSettings" id="LabelSettings_gqmmt"]
+font = ExtResource("12_jkv2x")
+font_size = 60
+
+[sub_resource type="LabelSettings" id="LabelSettings_yc10j"]
+font = ExtResource("12_jkv2x")
+font_size = 48
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_0wfyh")
@@ -155,17 +163,11 @@ light_color = Color(1, 0.941176, 0.666667, 1)
 light_energy = 1.25
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource("1_o5qli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88.2147, 2.35822, 161.474)
-
-[node name="PauseMenu" parent="." instance=ExtResource("3_sugp2")]
-visible = false
-anchors_preset = -1
-
 [node name="Terrain3D" type="Terrain3D" parent="." groups=["ground"]]
 data_directory = "res://assets/terrain"
 material = SubResource("Terrain3DMaterial_tefeu")
 assets = SubResource("Terrain3DAssets_85g3d")
+collision_mode = 3
 mesh_lods = 8
 top_level = true
 metadata/_edit_lock_ = true
@@ -174,23 +176,29 @@ metadata/_edit_lock_ = true
 
 [node name="Control" type="Control" parent="UI"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1880.0
+offset_bottom = -1040.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TimerLabel" type="Label" parent="UI/Control"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 8.0
+offset_right = 239.0
+offset_bottom = 82.5
 text = "<Timer>"
 label_settings = SubResource("LabelSettings_muem4")
 vertical_alignment = 1
 
 [node name="HuntLabel" type="Label" parent="UI/Control"]
 layout_mode = 0
-offset_top = 79.0
-offset_right = 453.0
-offset_bottom = 161.5
+offset_left = 8.0
+offset_top = 82.0
+offset_right = 461.0
+offset_bottom = 164.5
 text = "<HuntProgress>"
 label_settings = SubResource("LabelSettings_dp3eg")
 vertical_alignment = 1
@@ -206,6 +214,33 @@ label_settings = SubResource("LabelSettings_0ld40")
 horizontal_alignment = 2
 vertical_alignment = 1
 text_direction = 2
+
+[node name="WinMessage" type="Label" parent="UI/Control"]
+layout_mode = 1
+offset_left = 605.0
+offset_right = 1315.0
+offset_bottom = 82.5
+text = "Congratulations, you win!"
+label_settings = SubResource("LabelSettings_gqmmt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IntroMessage" type="Label" parent="UI/Control"]
+layout_mode = 0
+offset_left = 405.0
+offset_top = 336.0
+offset_right = 1514.0
+offset_bottom = 402.0
+text = "Complete the objective before the timer runs out!"
+label_settings = SubResource("LabelSettings_yc10j")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_sugp2")]
+visible = false
+z_index = 100
+anchors_preset = -1
 
 [node name="TreeCullingManager" type="Node3D" parent="."]
 script = ExtResource("15_jkv2x")
@@ -259,7 +294,7 @@ transform = Transform3D(-2.2, 0, -1.9233e-07, 0, 2.2, 0, 1.9233e-07, 0, -2.2, 23
 transform = Transform3D(-2.2, 0, -1.9233e-07, 0, 2.2, 0, 1.9233e-07, 0, -2.2, 230.517, -0.727115, 145.054)
 
 [node name="Tree38" parent="TreeCullingManager" instance=ExtResource("11_ya4ey")]
-transform = Transform3D(-2.2, 0, -1.9233e-07, 0, 2.2, 0, 1.9233e-07, 0, -2.2, 259.734, -0.240906, 117.407)
+transform = Transform3D(-2.2, 0, -1.9233e-07, 0, 2.2, 0, 1.9233e-07, 0, -2.2, 259.734, -0.322531, 117.407)
 
 [node name="Tree43" parent="TreeCullingManager" instance=ExtResource("11_ya4ey")]
 transform = Transform3D(-2.2, 0, -1.9233e-07, 0, 2.2, 0, 1.9233e-07, 0, -2.2, 236.942, -1.06361, 163.342)
@@ -985,7 +1020,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 172.961, 2.88659, 262.6
 transform = Transform3D(1.47405, 0, 2.0192, 0, 2.5, 0, -2.0192, 0, 1.47405, 204.733, 1.04683, 213.934)
 
 [node name="Tree80" parent="TreeCullingManager" instance=ExtResource("11_ya4ey")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 243.837, -0.240906, 184.696)
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 243.837, -0.898225, 184.696)
 
 [node name="Tree85" parent="TreeCullingManager" instance=ExtResource("11_ya4ey")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 265.199, 0.975093, 214.092)
@@ -1204,29 +1239,88 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 334.312, 2.41018, 373.4
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 336.423, 1.4878, 413.113)
 
 [node name="HuntManager" type="Node3D" parent="."]
-script = SubResource("GDScript_a8y0u")
+script = ExtResource("13_yc10j")
+
+[node name="Timer" type="Timer" parent="HuntManager"]
 
 [node name="NetPackSpawner" type="Node3D" parent="."]
-script = ExtResource("15_jbj1t")
+script = ExtResource("14_a8y0u")
 net_pack_scene = ExtResource("16_jbj1t")
 
-[node name="NetPackSpawn1" type="Node3D" parent="NetPackSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123.324, 3.22045, 147.25)
+[node name="SpawnPoint1" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 408.659, 0.673369, 328.724)
 
-[node name="NetPackSpawn2" type="Node3D" parent="NetPackSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.73, 0.853173, 172.302)
+[node name="SpawnPoint2" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 304.619, -1.25344, 330.723)
 
-[node name="NetPackSpawn3" type="Node3D" parent="NetPackSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.961, 3.20598, 129.765)
+[node name="SpawnPoint3" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 258.796, -1.49363, 398.972)
 
-[node name="NetPackSpawn4" type="Node3D" parent="NetPackSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.3242, 2.34391, 153.919)
+[node name="SpawnPoint4" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 168.637, 3.42183, 365.579)
 
-[node name="NetPackSpawn5" type="Node3D" parent="NetPackSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.295, 1.83076, 144.811)
+[node name="SpawnPoint5" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 315.113, 6.83196, 208.623)
 
-[node name="Wolf" parent="." instance=ExtResource("12_muem4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 94.9091, 4.62522, 126.181)
+[node name="SpawnPoint6" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 189.871, 1.46528, 129.622)
 
-[node name="deer" parent="." instance=ExtResource("18_dp3eg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.3042, 1.92213, 149.537)
+[node name="SpawnPoint7" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 132.168, 6.38627, 235.313)
+
+[node name="SpawnPoint8" type="Node3D" parent="NetPackSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83.8735, 0.190976, 264.726)
+
+[node name="PlayerSpawner" type="Node3D" parent="."]
+script = ExtResource("15_0ld40")
+player_scene = ExtResource("1_o5qli")
+
+[node name="SpawnPoint1" type="Node3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.836, 2.33712, 155.551)
+
+[node name="SpawnPoint2" type="Node3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 412.048, 2.32402, 247.469)
+
+[node name="SpawnPoint3" type="Node3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 370.509, 4.82371, 399.825)
+
+[node name="SpawnPoint4" type="Node3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 128.759, 2.63649, 397.391)
+
+[node name="DeerSpawner" type="Node3D" parent="."]
+script = ExtResource("16_muem4")
+scene_to_spawn = ExtResource("18_dp3eg")
+spawn_count = 2
+respawn = true
+
+[node name="SpawnPoint1" type="Node3D" parent="DeerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 189.092, 4.37875, 194.256)
+
+[node name="SpawnPoint2" type="Node3D" parent="DeerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186.699, 3.723, 334.94)
+
+[node name="SpawnPoint3" type="Node3D" parent="DeerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 237.267, 1.20659, 280.894)
+
+[node name="SpawnPoint4" type="Node3D" parent="DeerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 312.448, 3.90758, 243.341)
+
+[node name="SpawnPoint5" type="Node3D" parent="DeerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 344.153, 1.51249, 356.435)
+
+[node name="WolfSpawner" type="Node3D" parent="."]
+script = ExtResource("18_0ld40")
+scene_to_spawn = ExtResource("12_muem4")
+respawn = true
+
+[node name="SpawnPoint1" type="Node3D" parent="WolfSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 353.048, 6.0188, 344.055)
+
+[node name="SpawnPoint2" type="Node3D" parent="WolfSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 191.327, 3.04324, 269.212)
+
+[node name="SpawnPoint3" type="Node3D" parent="WolfSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 264.535, 3.28219, 172.003)
+
+[node name="SpawnPoint4" type="Node3D" parent="WolfSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 268.312, 0.0268817, 363.297)

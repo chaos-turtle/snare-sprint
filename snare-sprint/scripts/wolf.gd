@@ -38,7 +38,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
 	home_position = global_position
-
+	
 	create_nodes()
 	setup_detection_area()
 	setup_attack_area()
@@ -94,6 +94,8 @@ func setup_obstacle_raycast():
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+	else:
+		velocity.y = 0.0
 	update_state(delta)
 	handle_movement(delta)
 	move_and_slide()
@@ -111,11 +113,9 @@ func handle_movement(delta):
 		target_direction = get_intended_direction()
 		
 	if target_direction.length() > 0.1:
-		current_direction = current_direction.slerp(target_direction, turn_speed * delta)
-		current_direction = current_direction.normalized()
-		if current_direction.length() > 0.1:
-			var look_target = global_position + current_direction
-			look_at(look_target, Vector3.UP)
+		current_direction = current_direction.slerp(target_direction, turn_speed * delta).normalized()
+		var target_rotation = atan2(current_direction.x, current_direction.z) + PI
+		rotation.y = lerp_angle(rotation.y, target_rotation, turn_speed * delta)
 
 func get_intended_direction() -> Vector3:
 	match current_state:

@@ -7,6 +7,7 @@ extends CharacterBody3D
 enum DeerState { IDLE, WANDER, RUNNING, CAPTURED }
 var current_state = DeerState.IDLE
 var player_reference = null
+signal died
 
 @export var walk_speed = 2.0
 @export var run_speed = 8.0
@@ -23,6 +24,7 @@ var is_player_nearby = false
 var is_captured = false
 var capture_timer = 0.0
 var original_position = Vector3.ZERO
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
 	player_reference = get_tree().get_first_node_in_group("player")
@@ -47,6 +49,10 @@ func setup_detection_area():
 func _physics_process(delta):
 	if is_captured:
 		return
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	else:
+		velocity.y = 0.0
 	state_timer += delta
 	if player_reference:
 		check_player_proximity()
@@ -63,7 +69,6 @@ func _physics_process(delta):
 func get_captured():
 	if is_captured:
 		return
-	
 	is_captured = true
 	original_position = global_position
 	change_state(DeerState.CAPTURED)
@@ -73,6 +78,7 @@ func get_captured():
 
 func _on_animation_finished(animation_name: String):
 	if animation_name == "Die_000" and is_captured:
+		died.emit()
 		await get_tree().create_timer(0.5).timeout
 		queue_free()
 	elif animation_name == "Run":
