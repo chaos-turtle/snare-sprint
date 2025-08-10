@@ -9,7 +9,7 @@ var current_state = DeerState.IDLE
 var player_reference = null
 signal died
 
-@export var walk_speed = 2.0
+@export var walk_speed = 3.0
 @export var run_speed = 8.0
 @export var detection_range = 10.0
 @export var flee_distance = 20.0
@@ -49,10 +49,12 @@ func setup_detection_area():
 func _physics_process(delta):
 	if is_captured:
 		return
-	if not is_on_floor():
-		velocity.y -= gravity * delta
+	if is_on_floor():
+		velocity.y = 0
 	else:
-		velocity.y = 0.0
+		velocity.y -= gravity * delta
+	rotation.x = 0
+	rotation.z = 0
 	state_timer += delta
 	if player_reference:
 		check_player_proximity()
@@ -81,9 +83,6 @@ func _on_animation_finished(animation_name: String):
 		died.emit()
 		await get_tree().create_timer(0.5).timeout
 		queue_free()
-	elif animation_name == "Run":
-		if current_state == DeerState.RUNNING or current_state == DeerState.WANDER:
-			play_animation("Run")
 
 func check_player_proximity():
 	var distance_to_player = global_position.distance_to(player_reference.global_position)
@@ -138,7 +137,7 @@ func change_state(new_state: DeerState):
 			play_animation(anim_name)
 		DeerState.WANDER:
 			walk_duration = randf_range(3.0, 6.0)
-			walk_direction = Vector3.ZERO
+			#walk_direction = Vector3.ZERO
 			play_animation("Run")
 		DeerState.RUNNING:
 			play_animation("Run")
@@ -147,8 +146,9 @@ func change_state(new_state: DeerState):
 
 func play_animation(anim_name: String):
 	if animation_player and animation_player.has_animation(anim_name):
-		animation_player.stop()
-		animation_player.play(anim_name)
+		if animation_player.current_animation != anim_name or not animation_player.is_playing():
+			animation_player.stop()
+			animation_player.play(anim_name)
 
 	if anim_name == "Run":
 		var anim = animation_player.get_animation("Run")

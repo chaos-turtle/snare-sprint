@@ -16,7 +16,7 @@ var patrol_timer: Timer
 var obstacle_raycast: RayCast3D
 
 @export var idle_speed: float = 0.0
-@export var walk_speed: float = 2.0
+@export var walk_speed: float = 2.5
 @export var run_speed: float = 6.0
 @export var detection_range: float = 10.0
 @export var attack_range: float = 1.5
@@ -31,14 +31,13 @@ var player: Node3D
 var home_position: Vector3
 var patrol_target: Vector3
 var chase_timer: float = 0.0
-var current_direction: Vector3
-var target_direction: Vector3
-
+var current_direction: Vector3 = Vector3.FORWARD
+var target_direction: Vector3 = Vector3.FORWARD
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
 	home_position = global_position
-	
+
 	create_nodes()
 	setup_detection_area()
 	setup_attack_area()
@@ -49,8 +48,6 @@ func _ready():
 	attack_area.body_entered.connect(_on_attack_area_entered)
 	patrol_timer.timeout.connect(_on_patrol_timer_timeout)
 
-	current_direction = Vector3.FORWARD
-
 	patrol_timer.wait_time = patrol_wait_time
 	patrol_timer.start()
 
@@ -60,7 +57,7 @@ func create_nodes():
 	detection_area = Area3D.new()
 	detection_area.name = "DetectionArea"
 	add_child(detection_area)
-	
+
 	attack_area = Area3D.new()
 	attack_area.name = "AttackArea"
 	add_child(attack_area)
@@ -88,14 +85,16 @@ func setup_attack_area():
 	attack_area.add_child(attack_shape)
 
 func setup_obstacle_raycast():
-	obstacle_raycast.target_position = Vector3(0, 0, -obstacle_avoidance_distance)
+	obstacle_raycast.target_position = current_direction * obstacle_avoidance_distance
 	obstacle_raycast.enabled = true
 
 func _physics_process(delta):
-	if not is_on_floor():
-		velocity.y -= gravity * delta
+	if is_on_floor():
+		velocity.y = 0
 	else:
-		velocity.y = 0.0
+		velocity.y -= gravity * delta
+	rotation.x = 0
+	rotation.z = 0
 	update_state(delta)
 	handle_movement(delta)
 	move_and_slide()
@@ -103,6 +102,7 @@ func _physics_process(delta):
 func handle_movement(delta):
 	obstacle_raycast.target_position = current_direction * obstacle_avoidance_distance
 	obstacle_raycast.force_raycast_update()
+
 	if obstacle_raycast.is_colliding():
 		var normal = obstacle_raycast.get_collision_normal()
 		var avoidance_direction = current_direction.cross(Vector3.UP).normalized()
@@ -111,11 +111,11 @@ func handle_movement(delta):
 		target_direction = avoidance_direction
 	else:
 		target_direction = get_intended_direction()
-		
+
 	if target_direction.length() > 0.1:
-		current_direction = current_direction.slerp(target_direction, turn_speed * delta).normalized()
-		var target_rotation = atan2(current_direction.x, current_direction.z) + PI
-		rotation.y = lerp_angle(rotation.y, target_rotation, turn_speed * delta)
+		current_direction = current_direction.slerp(target_direction.normalized(), turn_speed * delta).normalized()
+		var target_rot = atan2(current_direction.x, current_direction.z) + PI
+		rotation.y = lerp_angle(rotation.y, target_rot, turn_speed * delta)
 
 func get_intended_direction() -> Vector3:
 	match current_state:
@@ -131,8 +131,8 @@ func get_intended_direction() -> Vector3:
 			return Vector3.ZERO
 
 func get_patrol_direction() -> Vector3:
-	var distance_to_target = global_position.distance_to(patrol_target)
-	if distance_to_target < 2.0:
+	var distance = global_position.distance_to(patrol_target)
+	if distance < 2.0:
 		change_state(WolfState.IDLE)
 		return Vector3.ZERO
 	return (patrol_target - global_position).normalized()
@@ -174,12 +174,12 @@ func update_chase_state(delta):
 	if chase_timer <= 0:
 		change_state(WolfState.PATROL)
 		return
-	var distance_to_player = global_position.distance_to(player.global_position)
-	
-	if distance_to_player > detection_range * 1.5:
+
+	var dist = global_position.distance_to(player.global_position)
+	if dist > detection_range * 1.5:
 		change_state(WolfState.PATROL)
 		return
-		
+
 	var speed = run_speed
 	velocity.x = current_direction.x * speed
 	velocity.z = current_direction.z * speed
@@ -188,8 +188,8 @@ func update_attack_state():
 	velocity.x = 0
 	velocity.z = 0
 	if player:
-		var direction = (player.global_position - global_position).normalized()
-		var look_target = global_position + direction
+		var dir = (player.global_position - global_position).normalized()
+		var look_target = global_position + dir
 		look_at(look_target, Vector3.UP)
 
 func change_state(new_state: WolfState):
@@ -197,7 +197,7 @@ func change_state(new_state: WolfState):
 		WolfState.CHASE:
 			chase_timer = 0.0
 	current_state = new_state
-	
+
 	match new_state:
 		WolfState.IDLE:
 			animation_player.play("Wolf_Skeleton|Wolf_Idle_")
@@ -225,13 +225,13 @@ func can_see_player() -> bool:
 	var distance = global_position.distance_to(player.global_position)
 	if distance > detection_range:
 		return false
+
 	var space_state = get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(
 		global_position + Vector3.UP,
 		player.global_position + Vector3.UP
 	)
 	var result = space_state.intersect_ray(query)
-	
 	return result.is_empty() or result.collider == player
 
 func _on_detection_area_entered(body):
@@ -252,30 +252,7 @@ func _on_attack_area_entered(body):
 func _on_patrol_timer_timeout():
 	if current_state == WolfState.IDLE:
 		change_state(WolfState.PATROL)
-	
 	patrol_timer.start()
 
 func trigger_game_over():
 	get_tree().change_scene_to_file("res://scenes/game_over.tscn")
-
-func check_multiple_directions() -> Vector3:
-	var directions = [
-		current_direction,
-		current_direction.rotated(Vector3.UP, PI/4),
-		current_direction.rotated(Vector3.UP, -PI/4),
-		current_direction.rotated(Vector3.UP, PI/2),
-		current_direction.rotated(Vector3.UP, -PI/2)
-	]
-	var space_state = get_world_3d().direct_space_state
-	
-	for direction in directions:
-		var query = PhysicsRayQueryParameters3D.create(
-			global_position + Vector3.UP * 0.5,
-			global_position + Vector3.UP * 0.5 + direction * obstacle_avoidance_distance
-		)
-		var result = space_state.intersect_ray(query)
-		
-		if result.is_empty():
-			return direction
-			
-	return -current_direction

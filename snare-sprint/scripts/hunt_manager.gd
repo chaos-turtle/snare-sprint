@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var objective_deer_count: int = 1
+@export var objective_deer_count: int = 5
 @export var total_time: int = 300
 @onready var score_label: Label = $"/root/Main/UI/Control/HuntLabel"
 @onready var timer_label: Label = $"/root/Main/UI/Control/TimerLabel"

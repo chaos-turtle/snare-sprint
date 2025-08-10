@@ -15,6 +15,9 @@ const CROUCH_TRANSITION_SPEED = 8.0
 @onready var jump_sound := $JumpSound
 @onready var collision_shape := $CollisionShape3D
 @onready var ammo_label: Label = $"/root/Main/UI/Control/AmmoLabel"
+@onready var walk_sound: AudioStreamPlayer = $WalkSound
+@onready var ammo_sound: AudioStreamPlayer = $AmmoSound
+@onready var shoot_sound: AudioStreamPlayer = $ShootSound
 @export var net_scene: PackedScene
 @export var cooldown_time: float = 1.5
 @export var max_ammo: int = 20
@@ -23,6 +26,9 @@ var can_shoot: bool = true
 var is_crouching = false
 var current_speed = SPEED
 var current_ammo: int = 3
+var footstep_timer: float = 0.0
+var footstep_interval: float = 0.5
+var last_footstep_sound: int = 0
 
 func _ready():
 	add_to_group("player")
@@ -57,9 +63,11 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		velocity.x = direction.x * current_speed
 		velocity.z = direction.z * current_speed
+		handle_footsteps(delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, current_speed)
 		velocity.z = move_toward(velocity.z, 0, current_speed)
+		footstep_timer = 0.0
 	
 	move_and_slide()
 
@@ -101,7 +109,7 @@ func shoot_net():
 	get_tree().current_scene.add_child(net)
 	net.global_transform.origin = muzzle.global_transform.origin
 	net.global_transform.basis = muzzle.global_transform.basis
-	
+	shoot_sound.play()
 	current_ammo -= 1
 	update_ammo_label()
 	
@@ -118,8 +126,26 @@ func update_ammo_label():
 
 func add_ammo(amount: int):
 	current_ammo = clamp(current_ammo + amount, 0, max_ammo)
+	ammo_sound.play()
 	update_ammo_label()
 
 func on_deer_captured():
 	var hunt_manager = get_node("/root/Main/HuntManager")
 	hunt_manager.on_deer_captured()
+
+func handle_footsteps(delta: float):
+	if not is_on_floor():
+		return
+	
+
+	var current_interval = footstep_interval
+	if current_speed == SPRINT_SPEED:
+		current_interval = footstep_interval * 0.7
+	elif current_speed == CROUCH_SPEED:
+		current_interval = footstep_interval * 1.5
+	
+	footstep_timer += delta
+	
+	if footstep_timer >= current_interval:
+		walk_sound.play()
+		footstep_timer = 0.0

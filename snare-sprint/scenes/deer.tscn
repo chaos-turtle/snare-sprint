@@ -3097,7 +3097,7 @@ _data = {
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7c7n6"]
-size = Vector3(1, 2.2, 1.4)
+size = Vector3(1, 2.2, 1.67137)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_euvas"]
 radius = 20.0
@@ -3348,7 +3348,7 @@ libraries = {
 }
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.968522, -0.4)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.81186, -0.4)
 shape = SubResource("BoxShape3D_7c7n6")
 
 [node name="DetectionArea" type="Area3D" parent="."]

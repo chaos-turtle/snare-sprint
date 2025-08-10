@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://bg3vfrpse6i34"]
+[gd_scene load_steps=40 format=3 uid="uid://bg3vfrpse6i34"]
 
 [ext_resource type="Script" uid="uid://jhug63q5med5" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://xs3xk2ig444k" path="res://scenes/player.tscn" id="1_o5qli"]
@@ -36,7 +36,6 @@ background_mode = 2
 sky = SubResource("Sky_sugp2")
 tonemap_mode = 2
 glow_enabled = true
-fog_enabled = true
 fog_light_color = Color(0.860369, 0.860369, 0.860369, 1)
 fog_light_energy = 0.3
 fog_sun_scatter = 0.2
@@ -151,6 +150,13 @@ font_size = 60
 font = ExtResource("12_jkv2x")
 font_size = 48
 
+[sub_resource type="LabelSettings" id="LabelSettings_jscy8"]
+line_spacing = 0.0
+font = ExtResource("12_jkv2x")
+font_size = 32
+shadow_size = 0
+shadow_offset = Vector2(0, 0)
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_0wfyh")
 
@@ -234,11 +240,26 @@ offset_bottom = 402.0
 text = "Complete the objective before the timer runs out!"
 label_settings = SubResource("LabelSettings_yc10j")
 
+[node name="Crosshair" type="Label" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 48.0
+anchor_bottom = 27.0
+offset_left = 1000.0
+offset_top = 544.0
+offset_right = -901.0
+offset_bottom = -492.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "+"
+label_settings = SubResource("LabelSettings_jscy8")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 2
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_sugp2")]
-visible = false
 z_index = 100
 anchors_preset = -1
 
@@ -1297,7 +1318,7 @@ respawn = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 189.092, 4.37875, 194.256)
 
 [node name="SpawnPoint2" type="Node3D" parent="DeerSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186.699, 3.723, 334.94)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 186.699, 3.64003, 334.94)
 
 [node name="SpawnPoint3" type="Node3D" parent="DeerSpawner"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 237.267, 1.20659, 280.894)
@@ -1314,7 +1335,7 @@ scene_to_spawn = ExtResource("12_muem4")
 respawn = true
 
 [node name="SpawnPoint1" type="Node3D" parent="WolfSpawner"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 353.048, 6.0188, 344.055)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 353.048, 1.79648, 344.055)
 
 [node name="SpawnPoint2" type="Node3D" parent="WolfSpawner"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 191.327, 3.04324, 269.212)
